@@ -41,5 +41,7 @@ flycheck_*.el
 .projectile
 
 # racket backup files
-.bak
-/compiled/
+*.bak
+**/compiled/
+*.swp
+*~

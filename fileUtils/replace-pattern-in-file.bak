@@ -1,9 +1,0 @@
-#lang racket
-
-(define (update-file path pattern insert)
-  (let* ([reg (regexp pattern)]
-         [after (regexp-replace reg (file->string path) insert)])
-  (call-with-input-file path
-    (lambda (out)
-      (display after out))
-    #:exists 'replace)))
