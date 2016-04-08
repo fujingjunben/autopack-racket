@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--iconModify确定渠道是否需要加icon角标 -->
+<SDKConfig xmlns="supersdk_autopacking" xmlns:xsi="http://www.w3.org/2001/XMLSchema" iconModify="true" sdkName="QiHu360" sdkVersion="1.1.6.6" innerVersion="1.2">
+	<Parameters>
+		<!-- 规定参数必须在application结点下面，name为参数在manifest文件中的名称(android:name属性)，description为参数文字描述，islocal标记该参数存放在本地还是服务器 -->
+		<Item name="BAIDU_DOMAIN1" description="tooltips" islocal="true"/>
+	</Parameters>
+	
+	<Manifest>
+		<!-- NodeData定义一个结点 node属性为结点名称 -->
+		<NodeData node="application">
+			<!-- attribute定义结点的属性，name属性为对应结点属性的名称，value属性为对应属性的值 -->
+			<Attribute name="android:name" value="value" />
+			<Attribute name="android:prop" value="prop" />
+			<NodeData node="activity">
+				<Attribute name="android:name" value="value" />
+				<NodeData node="intent">
+					<Attribute name="android:name" value="value" />
+					<!-- Revalue定义需要替换的结点属性 name属性为结点的属性，value为需要被替换为的值，书写规则为单引号+前面定义的参数名称+单引号 或者 单引号+PACKAGENAME+单引号 -->
+					<Revalue name="android:xxx" value="cn.m4399.operate.ui.'BAIDU_DOMAIN1'.LoginActivity" />
+				</NodeData>
+			</NodeData>
+		</NodeData>
+	</Manifest>
+	
+	<Resource>
+		<!-- url路径从Unity资源项目根路径开始 ，name属性为像用户展示的文字，最多8个字，description为参数文字描述 -->
+		<Item url="\asset\a.bin" name="导入签名文件" description="tooltips"/>
+	</Resource>
+</SDKConfig>

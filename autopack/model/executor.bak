@@ -1,0 +1,4 @@
+#lang racket
+;; accept data model from server
+
+(struct executor (id executor-name version-name file for-api for-resource sdk-id for-lang update-log create-time update-time))

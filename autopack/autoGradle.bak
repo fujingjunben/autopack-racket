@@ -1,0 +1,12 @@
+#lang racket
+(provide (all-defined-out))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; PATH Variable
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define gradle (find-executable-path "gradle"))
+
+(define (execute cmd . params)
+  (apply (lambda (args)
+           system*/exit-code cmd)
+         params))

@@ -1,0 +1,18 @@
+((name "瑞高（鱼丸）")
+ (id "AndRuiGao")
+ (channel "AND0037")
+ (version "3.1")
+ (inner-version "2.0")
+ (icon #f)
+ (exit-dialog? #f)
+ (unity-pack #t)
+ (package-suffix ".rg")
+ (meta-data
+  (("渠道号" "请在瑞高后台申请" "GAME_CHANNEL" #f "")
+   ("APP ID" "请在瑞高后台申请" "APP_ID" #t "merchantId")
+   ("APP KEY" "请在瑞高后台申请" "APP_KEY" #t "merchantKey")
+   ("BBS ID" "请在瑞高后台申请" "FORUM_ID" #t "")))
+
+ (manifest ())
+ (resource ())
+ (attention ()))

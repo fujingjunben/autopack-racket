@@ -1,0 +1,1 @@
+("6.3" ("54a67fbab86ca0a5a2698a440465279f7e2bf537" . "1488a33b8ed5d4f03c77b1595853c6d04f7fb01c") #"F:\\Dropbox\\programming\\Racket\\sdk\\sdk-module.rkt" (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"date.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

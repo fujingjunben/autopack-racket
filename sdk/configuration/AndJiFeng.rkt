@@ -1,0 +1,17 @@
+((name "机锋应用商店")
+ (id "AndJiFeng")
+ (channel "AND0015")
+ (version "4.2")
+ (inner-version "2.0")
+ (icon #t)
+ (exit-dialog? #f)
+ (unity-pack #f)
+ (package-suffix ".gfan")
+ (meta-data
+  (("APP KEY" "支付 Key" "gfan_pay_appkey" #f "jiFengID")
+   ("CPID" "用户自定义的渠道标识，不超过10位，只能包含数字、字母及符号“.”，如“gfan”"
+    "gfan_cpid" #f "")
+   ("PRIVATE KEY" "密钥，用于查询订单" "" #f "secret_key")))
+ (manifest ())
+ (resource ())
+ (attention ()))

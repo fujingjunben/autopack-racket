@@ -1,0 +1,8 @@
+#lang racket
+(require xml)
+
+(define input-xml
+  (lambda (AndroidManifest)
+    (call-with-input-file AndroidManifest
+      (lambda (in)
+        (read-xml in)))))

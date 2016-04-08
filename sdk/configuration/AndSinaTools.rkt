@@ -1,0 +1,21 @@
+((name "新浪助手")
+ (id "AndSinaTools")
+ (channel "AND0039")
+ (version "1.0.4")
+ (inner-version "2.0")
+ (icon #t)
+ (exit-dialog? #f)
+ (unity-pack #t)
+ (package-suffix ".sguo")
+ (meta-data
+  (("APP ID" "应用ID，在后台申请" "CYJH_APPID" #f "appid")
+   ("APP KEY" "厂商ID，在后台申请" "CYJH_APPKEY" #f "")
+   ("APP SECRET" "应用KEY，在后台申请" "CYJH_SECRETKEY" #f "appsecret")
+   ("VERSION" "CP自行定义并通知松果运维" "CYJH_APPVERSION" #f "")))
+ (manifest ())
+ (resource
+  (((url "\\assets\\sguo_game_config.json")
+    (name "配置文件")
+    (description
+     "请复制\\assets\\sguo_game_config.json到桌面，修改后导入资源即可。其中gameName为您的游戏名称；screenType为1是横屏，2是竖屏，fullScreen为true是全屏。其他参数不需要修改"))))
+ (attention ()))

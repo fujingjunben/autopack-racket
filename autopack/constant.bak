@@ -1,0 +1,8 @@
+#lang racket
+
+(provide STATUS )
+;; constant
+
+(define STATUS "status")
+(define TIME "time")
+(define DATA "data")

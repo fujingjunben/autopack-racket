@@ -1,0 +1,218 @@
+#lang racket
+(require net/uri-codec)
+(require net/url)
+(require json)
+(require net/http-client)
+
+(provide (all-defined-out))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; interface for api, resource, executor
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;
+;;; api
+;;;;;;;;
+(define host "http://192.168.2.103:8080/auto-packing")
+(define api-url (string-append host "/publish/apis"))
+(define resource-url (string-append host "/publish/resources"))
+(define executor-url (string-append host "/publish/executors"))
+(define api-query
+  ; get method
+  (lambda ((alist '()))
+    (query api-url alist)))
+
+(define api-create
+  ; post method
+  (lambda (data #:header (header '("Content-Type: application/x-www-form-urlencoded")))
+    (create api-url data header)))
+
+(define api-update
+  ; put method
+  (lambda (params data #:header (header '("Content-Type: application/x-www-form-urlencoded")))
+    (update api-url params data header)))
+
+(define api-delete
+  ; delete method
+  (lambda (alist)
+    (delete api-url alist)))
+
+;;;;;;;;;;;;;;;;;;
+;;; resource
+;;;;;;;;;;;;;;;;;;
+(define resource-query
+  ; get method
+  (lambda ((alist '()))
+    (query resource-url alist)))
+
+(define resource-create
+  ; post method
+  (lambda (data #:header (header '("Content-Type: multipart/form-data")))
+    (create resource-url data header)))
+
+(define resource-update
+  ; put method
+  (lambda (params data #:header (header '("Content-Type: application/x-www-form-urlencoded")))
+    (update resource-url params data header)))
+
+(define resource-delete
+  ; delete method
+  (lambda (alist)
+    (delete resource-url alist)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; executor
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define executor-query
+  ; get method
+  (lambda ((alist '()))
+    (query executor-url alist)))
+
+(define executor-create
+  ; post method
+  (lambda (data #:header (header '("Content-Type: multipart/form-data")))
+    (create executor-url data header)))
+
+(define executor-update
+  ; put method
+  (lambda (params data #:header (header '("Content-Type: application/x-www-form-urlencoded")))
+    (update executor-url params data header)))
+
+(define executor-delete
+  ; delete method
+  (lambda (alist)
+    (delete executor-url alist)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; lib
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define (->string bs)
+  (if (bytes? bs)
+      (bytes->string/utf-8 bs)
+      bs))
+
+(define (->bytes str)
+  (cond
+    [(string? str)
+     (string->bytes/utf-8 str)]
+    [(not str)
+     #""]
+    [else
+     str]))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; query, create, update, delete
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define query
+  (lambda (path params)
+    (get (string->url
+          (string-append
+           path
+           (if (null? params)
+               ""
+               (let* ([id (assoc 'id params)]
+                      [rest (remove id params)])
+                 (if id
+                     (string-append "/" (cdr id) "?" (alist->form-urlencoded rest))
+                     (string-append "?" (alist->form-urlencoded rest))))))))))
+
+(define create
+  (lambda (path data header)
+    (let* ([upload (assoc 'file data)]
+           [rest (remove upload data)]
+           [bytes  (if upload
+                       (bytes-append (->bytes (alist->form-urlencoded rest)) #"&" #"file=" (cdr upload))
+                       (->bytes (alist->form-urlencoded data)))]
+           [content-length (bytes-length bytes)])
+      (post (string->url path)
+            bytes
+            (cons (string-append "Content-Length: " (number->string content-length))
+                  header)))))
+
+(define update
+  (lambda (path params data header)
+    (displayln path)
+    (displayln params)
+    (put (string->url (string-append  path "/" (cdr (assoc 'id params))))
+         (->bytes (alist->form-urlencoded data))
+         header)))
+
+(define delete
+  (lambda (path params)
+    (del (string->url
+          (string-append
+           path
+           (let* ([id (assoc 'id params)]
+                  [rest (remove id params)])
+             (if (null? rest)
+                 (string-append "/" (cdr id))
+                 (string-append "/" (cdr id) "?" (alist->form-urlencoded rest)))))))))
+
+(define post
+  (lambda (url data header)
+    (call/input-url url
+                    (lambda (url header)
+                      (post-impure-port url data header))
+                    port->string
+                    header)))
+
+(define put
+  (lambda (url data header)
+    (call/input-url url
+                    (lambda (url header)
+                      (put-impure-port url data header))
+                    port->string
+                    header)))
+
+(define del
+  (lambda (url)
+    (call/input-url url
+                    delete-pure-port
+                    port->string)))
+
+
+(define get
+  (lambda (url)
+    (call/input-url url
+                    get-pure-port
+                    port->string)))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;
+;; test
+;;;;;;;;;;;;;;;;;;
+(define api-key "e6822264802c9620d3ed8ce0dd8f4284")
+(define site "https://api.flickr.com/services/rest/")
+
+(define param `((resource_name . "360")
+                     (version_name . "1.1.8")
+                     (inner_version . "2.0")
+                     (type . "GAME")
+                     (sdk_id . "And360")
+                     (for_platform . "Android")
+                     (update_log . "test")
+                     (force_update . "true")
+                     (current_version . "false")
+                     (file . "@And360.zip")))
+
+(define param-string (alist->form-urlencoded param))
+(define CRLF "\r\n")
+(define boundary "-------------------------RacketFormBoundaryf1nfLeDGcfc30oHf")
+
+(define upload-file (file->bytes "And360.zip"))
+
+(define data
+  (bytes-append
+              (->bytes (string-append "--" boundary CRLF
+                                      "Content-Disposition: form-data; name=\"resource_name\"" CRLF
+                                      "And360" CRLF
+                                      "--" boundary CRLF
+                                      "Content-Disposition: form-data; name=\"version_name\"" CRLF
+                                      "1.1.8" CRLF
+                                      "--" boundary CRLF
+                                      "Content-Disposition: form-data; name=\"file\"; filename=\"And360.zip\"" CRLF
+                                      "Content-Type: application/zip" CRLF))
+              upload-file
+              (->bytes (string-append CRLF "--" boundary "--" CRLF))))
+(define header (list (string-append "Content-Type: multipart/form-data; boundary=" boundary)
+                     (string-append "Content-Length: " (number->string (bytes-length data)))))
